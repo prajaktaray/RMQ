@@ -31,6 +31,7 @@ public class HybridRMQ implements RMQ{
         if ( arrLength <= 1) {
             return;
         }
+	originalArray= new float[arrLength];
         System.arraycopy(arr, 0, originalArray, 0, arrLength);
         
         blockSize = (int)(Math.log(arrLength) / Math.log(2)); 
