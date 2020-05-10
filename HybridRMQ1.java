@@ -1,4 +1,4 @@
-package hxr190001;
+package pxr180025;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -46,15 +46,11 @@ public class HybridRMQ1 {
 		
 	}
     
-    void SparseTableRMQ(){
-    	if (blockMinima.length==0) return; 
-		int len = blockMinima.length;
-		originalArray = new float[len];
-		System.arraycopy(blockMinima, 0, originalArray, 0, len);
-		
-//		// Calculate logs and powers up front
-//		CalculateLogs(len);
-//		powerCalculator(len);
+    void SparseTableRMQ(float []inputArr){
+    	if (inputArr.length==0) return; 
+		int len = inputArr.length;
+		float[] originalSparseArr = new float[len];
+		System.arraycopy(inputArr, 0, originalSparseArr, 0, len);
 		
 		int logColumn = (int)(Math.log(len) / Math.log(2));
 		
@@ -86,7 +82,7 @@ public class HybridRMQ1 {
         
         initializeBlockMinArr();       	
         
-        SparseTableRMQ();
+        SparseTableRMQ(blockMinima);
     }
 
     private int linearSearch(int i, int j) {
@@ -113,7 +109,7 @@ public class HybridRMQ1 {
         int iBlock = i / blockSize;
         int jBlock = j / blockSize;
         
-        // If i and j are in the same block or adjacent blocks
+        // if i and j are in the same block or adjacent blocks
         if ((jBlock - iBlock) <= 1) {
             return linearSearch(i, j);
         }
@@ -125,10 +121,12 @@ public class HybridRMQ1 {
             int jIndex = linearSearch(jBlockStart, j);
             
             int minIndex;
-            
+            System.out.println(iIndex);
+            System.out.println(jIndex);
             minIndex = minIndex(iIndex,jIndex);
-            
+            System.out.println(minIndex);
             int blockMinIndex = minBlock(iBlock + 1, jBlock - 1);
+            System.out.println(blockMinIndex);
             return minIndex(minIndex,originalIndices[blockMinIndex]);
         }
     }
@@ -183,7 +181,7 @@ public class HybridRMQ1 {
 		
 		System.out.println("Time for Query:");
 		Timer timer2 = new Timer();
-		minIndex = hrmq.rmq(2,4);
+		minIndex = hrmq.rmq(i,j);
 		
 		System.out.println(timer2.end());
 		
