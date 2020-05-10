@@ -1,26 +1,46 @@
-package pxr180025;
+package hxr190001;
+
+/**
+@author Harshita Rastogi
+@author Prajakta Ray
+*/
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Random;
 import java.util.Scanner;
 
+
+/** Hybrid implementation of the RMQ - Approach 1 */
 public class HybridRMQ1 {
 	int blockSize;		
     int blocks;					// number of blocks
     float[] originalArray;		// original input array
     int[] originalIndices;		// original indices of elements of input array
     float[] blockMinima;
-    int [][] sparseTable;
-    int len;
+    int [][] sparseTable;       //creating a sparse table 
+    int len;                    //size of array
 
-    private int minIndex(int index1, int index2) {
-		if (originalArray[index1] <= originalArray[index2])
-			return index1;
+    
+    /**
+	 * Helper function to get the index with the minimum value
+	 * in the given range
+	 * @param i the start index
+	 * @param j the end index
+	 * @return the index that represents the minimum value 
+	 */
+    public int minIndex(int i, int j) {
+		if (originalArray[i] <= originalArray[j])
+			return i;
 		else
-			return index2;
+			return j;
 		
 	} 
+    
+    /**
+	 * Initializes block_minima of blocks with minimum of each block.
+	 * @return
+	 */
     void initializeBlockMinArr(){
     	blockMinima =new float[blocks];
     	originalIndices = new int[blocks];
@@ -46,6 +66,10 @@ public class HybridRMQ1 {
 		
 	}
     
+    /**
+	 * Builds sparse table using the input array
+	 * @param inputArr the input array
+	 */
     void SparseTableRMQ(float []inputArr){
     	if (inputArr.length==0) return; 
 		int len = inputArr.length;
@@ -67,7 +91,12 @@ public class HybridRMQ1 {
 			}
 		} 
     }
-
+    
+    
+    /**
+     * Uses HybridRMQ to compute the answer to the query
+     * @param array The array over which RMQ is computed.
+     */
     public HybridRMQ1(float[] array){
     	
     	int arrLength = array.length;
@@ -81,11 +110,16 @@ public class HybridRMQ1 {
         blocks = (int) Math.ceil((double)(arrLength)/blockSize);
         
         initializeBlockMinArr();       	
-        
         SparseTableRMQ(blockMinima);
     }
 
-    private int linearSearch(int i, int j) {
+    /**
+     * Helper method to find out the minimum index
+     * @param i the starting index
+     * @param j the ending index
+     * @return minIndex the minimum index in the range
+     */
+    public int linearSearch(int i, int j) {
         int minIndex = i;
         float min = originalArray[i];
         for (int k = i + 1; k <= j; k++) {
@@ -98,10 +132,13 @@ public class HybridRMQ1 {
     }
 
     /**
-     * Computes RMQ(i, j) over the input array and returns
-     * the index of the minimum value in that range
+     * Computes RMQ(i, j) over the array - query
+     * @param i staring index
+     * @param j ending index
+     * @return index of minimum value in that range
      */
     public int rmq(int i, int j) {
+    	//if starting and ending index is same
         if (i == j) {
             return i;
         }
@@ -121,12 +158,8 @@ public class HybridRMQ1 {
             int jIndex = linearSearch(jBlockStart, j);
             
             int minIndex;
-            System.out.println(iIndex);
-            System.out.println(jIndex);
             minIndex = minIndex(iIndex,jIndex);
-            System.out.println(minIndex);
             int blockMinIndex = minBlock(iBlock + 1, jBlock - 1);
-            System.out.println(blockMinIndex);
             return minIndex(minIndex,originalIndices[blockMinIndex]);
         }
     }
@@ -134,17 +167,25 @@ public class HybridRMQ1 {
     /**
      * Helper function to find the block index of the minimum value 
      * for the given range of block indices  
-     * @param i		starting block index
-     * @param j		last block index
-     * @return		block index of the minimum value between the given range
+     * @param i	starting block index
+     * @param j	ending block index
+     * @return block index of the minimum value between the range
      */
-    private int minBlock(int i, int j) {
+    public int minBlock(int i, int j) {
     	int k = (int)Math.floor(Math.log(j-i+1)/Math.log(2));
         int power_of_2 = (int)Math.pow(k,2);
         int min = minIndex(sparseTable[i][k],sparseTable[j-power_of_2+1][k]);
         return min;
 
     }
+    
+    /**
+     * The Main function  
+     * Prints the time processing and query time 
+     * Along with the memory utilized on the console
+     * @param file - the input file 
+     * @throws FileNotFoundException 
+     */
     public static void main(String args[]) throws FileNotFoundException
 	{
 		Scanner in;
@@ -176,7 +217,6 @@ public class HybridRMQ1 {
 		
 		System.out.println("");
 		int i = rand.nextInt(size);
-		//int j = rand.nextInt(size);
 		int j = rand.nextInt(size-i) + i;
 		
 		System.out.println("Time for Query:");
