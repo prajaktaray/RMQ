@@ -192,12 +192,12 @@ public class HybridRMQ implements RMQ{
 		
 		System.out.println("");
 		int i = rand.nextInt(size);
-		int j = rand.nextInt(size);
-		int result = rand.nextInt(size-i) + i;
+		//int j = rand.nextInt(size);
+		int j = rand.nextInt(size-i) + i;
 		
 		System.out.println("Time for Query:");
 		Timer timer2 = new Timer();
-		minIndex = hrmq.rmq(i,result);
+		minIndex = hrmq.rmq(i,j);
 		/*
 		 * if(i<j) { //System.out.println("Range : "+ i +" - " + j); timer2 = new
 		 * Timer(); minIndex = hrmq.rmq(i,j); } else { //System.out.println("Range : "+
@@ -207,7 +207,7 @@ public class HybridRMQ implements RMQ{
 		System.out.println(timer2.end());
 		
 		System.out.println("\n");
-		System.out.println("Range : "+ i +" - " + result);
+		System.out.println("Range : "+ i +" - " + j);
 		System.out.println("Index of minimum value : " + minIndex);
     	System.out.println("Minimum value : " + arr[minIndex]);
 		
